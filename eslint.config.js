@@ -5,6 +5,11 @@ module.exports = [
   ...expo,
   prettier,
   {
-    ignores: ['dist/*'],
+    rules: {
+      'prettier/prettier': 'warn',
+    },
+  },
+  {
+    ignores: ['dist/*', '.gemini/antigravity/brain/*'],
   },
 ];
