@@ -1,11 +1,16 @@
-import { Text, View } from 'react-native';
+import { useAuth } from '@clerk/expo';
+import { Redirect, Stack } from 'expo-router';
 
-const Home = () => {
-  return (
-    <View>
-      <Text>Home</Text>
-    </View>
-  );
-};
+export default function Layout() {
+  const { isSignedIn, isLoaded } = useAuth();
 
-export default Home;
+  if (!isLoaded) {
+    return null;
+  }
+
+  if (!isSignedIn) {
+    return <Redirect href="/(auth)/sign-in" />;
+  }
+
+  return <Stack />;
+}

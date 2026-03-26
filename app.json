@@ -21,7 +21,6 @@
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/splash.png"
       }
-     
     },
     "web": {
       "output": "static",
@@ -41,7 +40,9 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "@clerk/expo",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
