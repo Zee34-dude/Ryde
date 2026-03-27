@@ -1,4 +1,5 @@
 import { ScrollView, Text, TouchableOpacity, View, Image, StyleSheet, Alert } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { ReactNativeModal } from 'react-native-modal';
 import { Href, useRouter } from 'expo-router';
 import CustomButton from '@/components/CustomButton';
@@ -15,7 +16,8 @@ const SignUp = () => {
   const [name, setName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
   const [verification, setVerification] = useState({
     state: 'default',
     error: '',
@@ -23,6 +25,7 @@ const SignUp = () => {
   });
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     try {
       const { error } = await signUp.password({
         emailAddress,
@@ -39,10 +42,13 @@ const SignUp = () => {
     } catch (err: any) {
       console.log(JSON.stringify(err, null, 2));
       Alert.alert('Error', err.errors[0].message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleVerify = async () => {
+    setVerifying(true);
     try {
       await signUp.verifications.verifyEmailCode({
         code: verification.code,
@@ -73,6 +79,8 @@ const SignUp = () => {
       }
     } catch (err: any) {
       setVerification({ ...verification, state: 'error', error: err.errors[0].message });
+    } finally {
+      setVerifying(false);
     }
   };
 
@@ -122,20 +130,23 @@ const SignUp = () => {
   //   )
   // }
   return (
-    <ScrollView className="flex-1 h-full bg-white">
-      <View className="flex-1 bg-white">
-        <View className="relative w-full h-[250px]">
-          <Image source={images.signUpCar} className="z-0 w-full h-[250px]" />
-          <Text className="text-2xl font-JakartaSemiBold text-center absolute bottom-5 left-5">
-            {' '}
-            Sign Up with Ryde
-          </Text>
-          <Text className="text-md font-JakartaMedium text-gray-400 text-center mt-2 px-10">
-            Join us and get a comfortable ride to your destination!
-          </Text>
+    <ScrollView className="flex-1 bg-secondary-900">
+      <View className="flex-1 bg-secondary-900 pb-10">
+        <View className="relative w-full h-[300px]">
+          <Image source={images.signUpCar} className="z-0 w-full h-full opacity-60" />
+          <LinearGradient
+            colors={['transparent', 'rgba(15, 23, 42, 0.8)', '#0F172A']}
+            className="absolute inset-0 z-10"
+          />
+          <View className="absolute bottom-10 left-0 right-0 p-8 z-20">
+            <Text className="text-4xl font-JakartaExtraBold text-white">Create Account</Text>
+            <Text className="text-md font-JakartaMedium text-secondary-300 mt-2">
+              Start your journey with Ryde
+            </Text>
+          </View>
         </View>
 
-        <View className="p-5">
+        <View className="px-6 -mt-10 z-30">
           <InputField
             label="Name"
             placeholder="Enter your name"
@@ -154,64 +165,81 @@ const SignUp = () => {
             label="Password"
             placeholder="Enter your password"
             icon={icons.lock}
+            secureTextEntry={true}
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
-          <CustomButton title="Sign Up" onPress={handleSubmit} />
-          {/* OAuth */}
+          <CustomButton 
+            title="Sign Up" 
+            onPress={handleSubmit} 
+            loading={isLoading} 
+            className="mt-4 shadow-indigo-500/30" 
+          />
+          
           <OAuth />
-          <TouchableOpacity onPress={() => router.replace('/(auth)/sign-in')} className="mt-5">
-            <Text className="text-general-200 font-JakartaSemiBold text-center ">
-              Already have an account? <Text className="text-primary-500">Log In</Text>
+          
+          <TouchableOpacity onPress={() => router.replace('/(auth)/sign-in')} className="mt-4">
+            <Text className="text-secondary-400 font-JakartaSemiBold text-center">
+              Already have an account? <Text className="text-primary-500 font-JakartaBold">Log In</Text>
             </Text>
           </TouchableOpacity>
         </View>
+
         <ReactNativeModal
-          isVisible={verification.state === 'pending'}
-          // onBackdropPress={() =>
-          //   setVerification({ ...verification, state: "default" })
-          // }
-          onModalHide={() => {
-            if (verification.state === 'success') {
-              setShowSuccessModal(true);
-            }
-          }}
+          isVisible={verification.state === 'pending' || verification.state === 'success'}
+          onBackdropPress={() => setVerification({ ...verification, state: 'default' })}
+          animationIn="fadeInUp"
+          animationOut="fadeOutDown"
         >
-          <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-            <Text className="font-JakartaExtraBold text-2xl mb-2">Verification</Text>
-            <Text className="font-Jakarta mb-5">
-              We&apos;ve sent a verification code to {emailAddress}.
-            </Text>
-            <InputField
-              label={'Code'}
-              icon={icons.lock}
-              placeholder={'12345'}
-              value={verification.code}
-              keyboardType="numeric"
-              onChangeText={(code) => setVerification({ ...verification, code })}
-            />
-            {verification.error && (
-              <Text className="text-red-500 text-sm mt-1">{verification.error}</Text>
+          <View className="bg-secondary-800 px-7 py-9 rounded-3xl border border-secondary-700 min-h-[300px]">
+            {verification.state === 'pending' ? (
+              <>
+                <TouchableOpacity
+                  onPress={() => setVerification({ ...verification, state: 'default' })}
+                  className="bg-secondary-700 w-10 h-10 rounded-full flex items-center justify-center mb-5"
+                >
+                  <Image source={icons.backArrow} className="w-5 h-5" style={{ tintColor: '#fff' }} />
+                </TouchableOpacity>
+
+                <Text className="font-JakartaExtraBold text-2xl mb-2 text-white">Verification</Text>
+                <Text className="font-JakartaMedium text-secondary-400 mb-5">
+                  We&apos;ve sent a verification code to {emailAddress}.
+                </Text>
+                <InputField
+                  label={'Code'}
+                  icon={icons.lock}
+                  placeholder={'12345'}
+                  value={verification.code}
+                  keyboardType="numeric"
+                  labelStyle="text-white"
+                  onChangeText={(code) => setVerification({ ...verification, code })}
+                />
+                {verification.error && (
+                  <Text className="text-red-500 text-sm mt-1">{verification.error}</Text>
+                )}
+                <CustomButton
+                  title="Verify Email"
+                  onPress={handleVerify}
+                  className="mt-8 bg-success-500 shadow-success-500/20"
+                  loading={verifying}
+                />
+              </>
+            ) : (
+              <View className="flex items-center justify-center">
+                <View className="w-24 h-24 bg-success-500/20 rounded-full flex items-center justify-center mb-5">
+                  <Image source={images.check} className="w-14 h-14" />
+                </View>
+                <Text className="text-3xl font-JakartaExtraBold text-center text-white">Verified</Text>
+                <Text className="text-base text-secondary-400 font-JakartaMedium text-center mt-3">
+                  You have successfully verified your account.
+                </Text>
+                <CustomButton
+                  title="Browse Home"
+                  onPress={() => router.push(`/(root)/(tabs)/home`)}
+                  className="mt-8 shadow-indigo-500/30"
+                />
+              </View>
             )}
-            <CustomButton
-              title="Verify Email"
-              onPress={handleVerify}
-              className="mt-5 bg-success-500"
-            />
-          </View>
-        </ReactNativeModal>
-        <ReactNativeModal isVisible={verification.state === 'success'}>
-          <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-            <Image source={images.check} className="w-[110px] h-[110px] mx-auto my-5" />
-            <Text className="text-3xl font-JakartaBold text-center">Verified</Text>
-            <Text className="text-base text-gray-400 font-Jakarta text-center mt-2">
-              You have successfully verified your account.
-            </Text>
-            <CustomButton
-              title="Browse Home"
-              onPress={() => router.push(`/(root)/(tabs)/home`)}
-              className="mt-5"
-            />
           </View>
         </ReactNativeModal>
       </View>

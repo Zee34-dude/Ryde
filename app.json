@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Ryde",
-    "slug": "Ryde",
+    "name": "Dryve",
+    "slug": "Dryve",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "Ryde",
+    "scheme": "Dryve",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",

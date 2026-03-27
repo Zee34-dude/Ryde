@@ -74,20 +74,20 @@ export const icons = {
 export const onboarding = [
   {
     id: 1,
-    title: 'The perfect ride is just a tap away!',
-    description: 'Your journey begins with Ryde. Find your ideal ride effortlessly.',
+    title: 'Your ride, redefined',
+    description: "Experience the next level of urban mobility with Dryve's premium fleet and seamless booking.",
     image: images.onboarding1,
   },
   {
     id: 2,
-    title: 'Best car in your hands with Ryde',
-    description: 'Discover the convenience of finding your perfect ride with Ryde',
+    title: 'Luxury at your fingertips',
+    description: 'Choose from a curated selection of top-tier vehicles tailored for every occasion and style.',
     image: images.onboarding2,
   },
   {
     id: 3,
-    title: "Your ride, your way. Let's go!",
-    description: 'Enter your destination, sit back, and let us take care of the rest.',
+    title: 'Arrive in style, every time',
+    description: 'Reliable, professional, and elegant. We handle the logistics while you enjoy the journey.',
     image: images.onboarding3,
   },
 ];
