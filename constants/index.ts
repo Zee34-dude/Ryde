@@ -30,7 +30,7 @@ import noResult from '@/assets/images/no-result.png';
 import onboarding1 from '@/assets/images/onboarding1.png';
 import onboarding2 from '@/assets/images/onboarding2.png';
 import onboarding3 from '@/assets/images/onboarding3.png';
-import signUpCar from '@/assets/images/signup-car.png';
+import signUpCar from '@/assets/images/car-side-view.webp';
 
 export const images = {
   onboarding1,
@@ -75,19 +75,22 @@ export const onboarding = [
   {
     id: 1,
     title: 'Your ride, redefined',
-    description: "Experience the next level of urban mobility with Dryve's premium fleet and seamless booking.",
+    description:
+      "Experience the next level of urban mobility with Dryve's premium fleet and seamless booking.",
     image: images.onboarding1,
   },
   {
     id: 2,
     title: 'Luxury at your fingertips',
-    description: 'Choose from a curated selection of top-tier vehicles tailored for every occasion and style.',
+    description:
+      'Choose from a curated selection of top-tier vehicles tailored for every occasion and style.',
     image: images.onboarding2,
   },
   {
     id: 3,
     title: 'Arrive in style, every time',
-    description: 'Reliable, professional, and elegant. We handle the logistics while you enjoy the journey.',
+    description:
+      'Reliable, professional, and elegant. We handle the logistics while you enjoy the journey.',
     image: images.onboarding3,
   },
 ];
